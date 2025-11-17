@@ -1,8 +1,0 @@
-com\devops\tasks\Task$Status.class
-com\devops\tasks\TaskController.class
-com\devops\tasks\TaskEntity$Status.class
-com\devops\tasks\AuditLog.class
-com\devops\tasks\TaskEntity.class
-com\devops\tasks\TaskService.class
-com\devops\tasks\Task.class
-com\devops\tasks\TaskManagerApiApplication.class
