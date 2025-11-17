@@ -3,6 +3,7 @@ package com.devops.tasks;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Represents a dynamic audit log entry (MongoDB Document).
@@ -34,3 +35,5 @@ public class AuditLog {
     public String getEventType() { return eventType; }
     public String getNewValue() { return newValue; }
 }
+
+

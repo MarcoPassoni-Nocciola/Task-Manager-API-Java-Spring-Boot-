@@ -1,73 +1,45 @@
 package com.devops.tasks;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import java.util.UUID;
 
 /**
- * Simple task entity used by the Task Manager API.
+ * Represents a stable task entity (PostgreSQL/JPA Entity).
+ * Stores task details, current status, and assignment.
  */
+@Entity
 public class TaskEntity {
 
+    // Possible states for the task workflow
+    public enum Status {
+        TODO, IN_PROGRESS, DONE
+    }
+
+    @Id
     private UUID id;
     private String title;
     private String description;
-    private boolean completed;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String assignedUser;
+    private Status status;
 
     public TaskEntity() {
-        this.id = UUID.randomUUID();
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = this.createdAt;
+        // Mock task for simulation
+        this.id = UUID.fromString("f0e1d2c3-b4a5-6789-0123-456789abcdef"); 
+        this.title = "Implement GitLab CI/CD Pipeline";
+        this.description = "Set up 7 stages including Checkstyle, SpotBugs, and integration tests.";
+        this.assignedUser = "Alice";
+        this.status = Status.TODO;
     }
 
-    public TaskEntity(String title, String description) {
-        this();
-        this.title = title;
-        this.description = description;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-        touch();
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-        touch();
-    }
-
-    public boolean isCompleted() {
-        return completed;
-    }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
-        touch();
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    private void touch() {
-        this.updatedAt = LocalDateTime.now();
-    }
+    // Getters and Setters
+    public UUID getId() { return id; }
+    public String getTitle() { return title; }
+    public String getDescription() { return description; }
+    public String getAssignedUser() { return assignedUser; }
+    public Status getStatus() { return status; }
+    public void setStatus(Status status) { this.status = status; }
+    public void setAssignedUser(String assignedUser) { this.assignedUser = assignedUser; }
 }
+
 
