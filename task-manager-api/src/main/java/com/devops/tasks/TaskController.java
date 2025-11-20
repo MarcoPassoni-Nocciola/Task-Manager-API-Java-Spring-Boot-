@@ -58,7 +58,7 @@ public class TaskController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Task createTask(@RequestBody Task task) {
-        // Hardcode the creating user ID for pipeline testing purposes
+        // Hardcode the creating user ID for testing purposes
         String currentUserId = "current_user"; 
         return taskService.createTask(task, currentUserId);
     }

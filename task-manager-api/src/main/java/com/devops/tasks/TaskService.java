@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Service layer for managing Task entities.
- * Uses an in-memory map for simplicity in the context of a CI/CD pipeline assignment.
+ * Uses an in-memory map for simplicity and compatibility
  */
 @Service
 public class TaskService {
