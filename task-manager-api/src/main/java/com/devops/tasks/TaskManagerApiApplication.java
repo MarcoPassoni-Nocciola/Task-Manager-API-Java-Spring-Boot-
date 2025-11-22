@@ -5,9 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 /**
- * Main class for the Task Mmanager application.
- * The focus of this application is to show an example of a Task Manager using Java
- * that can create a task, assign it to a user and update or delete the task. */
+ * Main class for the Task Manager API.
+ * Excludes DataSourceAutoConfiguration to avoid connection issues during pipeline stages 
+ * that don't need the database running (e.g., 'build', 'verify').
+ */
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class TaskManagerApiApplication {
 

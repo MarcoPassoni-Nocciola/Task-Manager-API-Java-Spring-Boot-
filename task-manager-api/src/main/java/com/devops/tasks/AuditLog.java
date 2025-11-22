@@ -8,7 +8,6 @@ import java.util.UUID;
 /**
  * Represents a dynamic audit log entry (MongoDB Document).
  * Used for high-volume tracking of state changes or user interactions.
- * Currently not used in the application, but might be implemented later.
  */
 @Document(collection = "auditlogs")
 public class AuditLog {
