@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+  <!-- Example: ignore findings in test classes -->
+  <Match>
+    <Class name="~.*Test$"/>
+  </Match>
+
+  <!-- Example: ignore a specific bug pattern for a given class -->
+  <!--
+  <Match>
+    <Class name="com.devops.tasks.TaskService"/>
+    <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
+  </Match>
+  -->
+</FindBugsFilter>
