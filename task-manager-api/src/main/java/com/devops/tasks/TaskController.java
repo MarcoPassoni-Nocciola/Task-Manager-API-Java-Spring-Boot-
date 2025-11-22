@@ -92,6 +92,13 @@ public class TaskController {
         }
     }
 
+    // --- DELETE method ---
+
+    /**
+     * Delete a task by UserID.
+     * Example: DELETE /api/v1/users/{userId}
+     */
+    
     @DeleteMapping("/users/{userId}")
     public ResponseEntity<Void> deleteTasksByUserId(@PathVariable String userId) {
         if(taskService.deleteTasksOfUser(userId)){
