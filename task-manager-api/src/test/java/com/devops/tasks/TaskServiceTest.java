@@ -101,6 +101,127 @@ class TaskServiceTest {
         List<Task> userATasksAfter = taskService.getTasksAssignedToUser("userA");
         assertEquals(2, userATasksAfter.size(), "Dovrebbero esserci 2 task assegnati a 'userA' dopo la creazione.");
     }
+
+    @Test
+    void testDeleteTasksOfUser_DeletesAllTasksForUser() {
+        // Setup: Create multiple tasks assigned to the same user
+        String targetUserId = "targetUser";
+        Task task1 = new Task("Task 1", "First task", "creator1");
+        task1.setAssignedToUserId(targetUserId);
+        Task created1 = taskService.createTask(task1, "creator1");
+        
+        Task task2 = new Task("Task 2", "Second task", "creator2");
+        task2.setAssignedToUserId(targetUserId);
+        Task created2 = taskService.createTask(task2, "creator2");
+        
+        Task task3 = new Task("Task 3", "Third task", "creator3");
+        task3.setAssignedToUserId(targetUserId);
+        Task created3 = taskService.createTask(task3, "creator3");
+        
+        // Create a task assigned to a different user (should NOT be deleted)
+        Task otherTask = new Task("Other Task", "Different user", "creator4");
+        otherTask.setAssignedToUserId("otherUser");
+        Task otherCreated = taskService.createTask(otherTask, "creator4");
+        
+        // Verify initial state: 3 tasks for targetUser + 1 for otherUser + 3 from constructor = 7 total
+        List<Task> targetUserTasksBefore = taskService.getTasksAssignedToUser(targetUserId);
+        assertEquals(3, targetUserTasksBefore.size(), "Dovrebbero esserci 3 task assegnati a targetUser prima della cancellazione.");
+        
+        // Execute: Delete all tasks for targetUser
+        boolean deleted = taskService.deleteTasksOfUser(targetUserId);
+        
+        // Verify: Method returns true
+        assertTrue(deleted, "deleteTasksOfUser dovrebbe restituire true quando vengono eliminati task.");
+        
+        // Verify: All tasks for targetUser are deleted
+        List<Task> targetUserTasksAfter = taskService.getTasksAssignedToUser(targetUserId);
+        assertEquals(0, targetUserTasksAfter.size(), "Tutti i task assegnati a targetUser dovrebbero essere eliminati.");
+        
+        // Verify: Tasks cannot be retrieved by ID
+        assertFalse(taskService.getTaskById(created1.getId()).isPresent(), "Task 1 dovrebbe essere eliminato.");
+        assertFalse(taskService.getTaskById(created2.getId()).isPresent(), "Task 2 dovrebbe essere eliminato.");
+        assertFalse(taskService.getTaskById(created3.getId()).isPresent(), "Task 3 dovrebbe essere eliminato.");
+        
+        // Verify: Task assigned to other user is NOT deleted
+        assertTrue(taskService.getTaskById(otherCreated.getId()).isPresent(), "Il task assegnato ad altri utenti NON dovrebbe essere eliminato.");
+        List<Task> otherUserTasks = taskService.getTasksAssignedToUser("otherUser");
+        assertEquals(1, otherUserTasks.size(), "Il task dell'altro utente dovrebbe ancora esistere.");
+    }
+
+    @Test
+    void testDeleteTasksOfUser_ReturnsFalseWhenNoTasksFound() {
+        // Try to delete tasks for a user that has no tasks
+        String nonExistentUser = "nonExistentUser";
+        
+        // Verify user has no tasks
+        List<Task> tasksBefore = taskService.getTasksAssignedToUser(nonExistentUser);
+        assertEquals(0, tasksBefore.size(), "L'utente non dovrebbe avere task assegnati.");
+        
+        // Execute: Try to delete
+        boolean deleted = taskService.deleteTasksOfUser(nonExistentUser);
+        
+        // Verify: Method returns false
+        assertFalse(deleted, "deleteTasksOfUser dovrebbe restituire false quando non ci sono task da eliminare.");
+    }
+
+    @Test
+    void testDeleteTasksOfUser_DeletesSingleTask() {
+        // Setup: Create one task for a user
+        String singleUser = "singleUser";
+        Task task = new Task("Single Task", "Only task", "creator");
+        task.setAssignedToUserId(singleUser);
+        Task created = taskService.createTask(task, "creator");
+        
+        // Verify initial state
+        List<Task> tasksBefore = taskService.getTasksAssignedToUser(singleUser);
+        assertEquals(1, tasksBefore.size(), "Dovrebbe esserci 1 task prima della cancellazione.");
+        
+        // Execute: Delete
+        boolean deleted = taskService.deleteTasksOfUser(singleUser);
+        
+        // Verify: Returns true and task is deleted
+        assertTrue(deleted, "Dovrebbe restituire true quando viene eliminato almeno un task.");
+        assertFalse(taskService.getTaskById(created.getId()).isPresent(), "Il task dovrebbe essere eliminato.");
+        List<Task> tasksAfter = taskService.getTasksAssignedToUser(singleUser);
+        assertEquals(0, tasksAfter.size(), "Non dovrebbero esserci più task dopo la cancellazione.");
+    }
+
+    @Test
+    void testDeleteTasksOfUser_DoesNotAffectOtherUsers() {
+        // Setup: Create tasks for multiple users
+        String user1 = "user1";
+        String user2 = "user2";
+        String user3 = "user3";
+        
+        Task task1 = new Task("User1 Task", "Task for user1", "creator");
+        task1.setAssignedToUserId(user1);
+        Task created1 = taskService.createTask(task1, "creator");
+        
+        Task task2 = new Task("User2 Task", "Task for user2", "creator");
+        task2.setAssignedToUserId(user2);
+        Task created2 = taskService.createTask(task2, "creator");
+        
+        Task task3 = new Task("User3 Task", "Task for user3", "creator");
+        task3.setAssignedToUserId(user3);
+        Task created3 = taskService.createTask(task3, "creator");
+        
+        // Execute: Delete only user1's tasks
+        boolean deleted = taskService.deleteTasksOfUser(user1);
+        
+        // Verify: user1's task is deleted
+        assertTrue(deleted, "Dovrebbe restituire true.");
+        assertFalse(taskService.getTaskById(created1.getId()).isPresent(), "Il task di user1 dovrebbe essere eliminato.");
+        
+        // Verify: Other users' tasks are NOT deleted
+        assertTrue(taskService.getTaskById(created2.getId()).isPresent(), "Il task di user2 NON dovrebbe essere eliminato.");
+        assertTrue(taskService.getTaskById(created3.getId()).isPresent(), "Il task di user3 NON dovrebbe essere eliminato.");
+        
+        List<Task> user2Tasks = taskService.getTasksAssignedToUser(user2);
+        assertEquals(1, user2Tasks.size(), "user2 dovrebbe ancora avere il suo task.");
+        
+        List<Task> user3Tasks = taskService.getTasksAssignedToUser(user3);
+        assertEquals(1, user3Tasks.size(), "user3 dovrebbe ancora avere il suo task.");
+    }
 }
 
 

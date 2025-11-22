@@ -6,7 +6,7 @@ import java.util.UUID;
 
 /**
  * Represents a stable task entity (PostgreSQL/JPA Entity).
- * Stores task details, current status, and assigned user.
+ * Stores task details, current status, and assignment.
  */
 @Entity
 public class TaskEntity {

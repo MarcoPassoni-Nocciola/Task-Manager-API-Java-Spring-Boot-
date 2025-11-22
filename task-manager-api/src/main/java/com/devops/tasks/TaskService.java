@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Service layer for managing Task entities.
- * Uses an in-memory map for simplicity and compatibility
+ * Uses an in-memory map for simplicity in the context of a CI/CD pipeline assignment.
  */
 @Service
 public class TaskService {
@@ -39,30 +39,27 @@ public class TaskService {
     }
 
     /**
-     * Returns a snapshot list of all tasks currently stored in the in-memory repository.
-     *
-     * @return an {@link ArrayList} containing all tasks
+     * Retrieves all tasks.
+     * @return List of all tasks.
      */
     public List<Task> getAllTasks() {
         return new ArrayList<>(taskRepository.values());
     }
 
     /**
-     * Returns the task with the given id, if present.
-     *
-     * @param id the task id
-     * @return an {@link Optional} containing the task if found, otherwise {@link Optional#empty()}
+     * Retrieves a task by its ID.
+     * @param id The ID of the task.
+     * @return An Optional containing the Task if found, or empty.
      */
     public Optional<Task> getTaskById(String id) {
         return Optional.ofNullable(taskRepository.get(id));
     }
 
     /**
-     * Creates a new task and assigns metadata (id and creator).
-     *
-     * @param task the task to create
-     * @param createdByUserId the id of the user creating the task
-     * @return the created {@link Task} instance
+     * Creates a new task.
+     * @param task The task object to create.
+     * @param createdByUserId The ID of the user creating the task.
+     * @return The created Task object.
      */
     public Task createTask(Task task, String createdByUserId) {
         task.setId(UUID.randomUUID().toString());
@@ -78,11 +75,10 @@ public class TaskService {
     }
 
     /**
-     * Updates an existing task with the provided values.
-     *
-     * @param id the id of the task to update
-     * @param updatedTask the task object containing updated values
-     * @return an {@link Optional} containing the updated task if the id was found, otherwise {@link Optional#empty()}
+     * Updates an existing task.
+     * @param id The ID of the task to update.
+     * @param updatedTask The task object with new data.
+     * @return An Optional containing the updated Task if the ID was found, or empty.
      */
     public Optional<Task> updateTask(String id, Task updatedTask) {
         Task existingTask = taskRepository.get(id);
@@ -99,20 +95,18 @@ public class TaskService {
     }
 
     /**
-     * Deletes the task with the specified id.
-     *
-     * @param id the task id
-     * @return {@code true} if the task was deleted, {@code false} otherwise
+     * Deletes a task by its ID.
+     * @param id The ID of the task to delete.
+     * @return true if the task was deleted, false otherwise.
      */
     public boolean deleteTask(String id) {
         return taskRepository.remove(id) != null;
     }
     
     /**
-     * Returns the tasks assigned to the specified user.
-     *
-     * @param userId the id of the assigned user
-     * @return a list of tasks assigned to the user
+     * Retrieves tasks assigned to a specific user.
+     * @param userId The ID of the assigned user.
+     * @return List of tasks assigned to the user.
      */
     public List<Task> getTasksAssignedToUser(String userId) {
         return taskRepository.values().stream()
@@ -120,7 +114,8 @@ public class TaskService {
                 .toList();
     }
 
-    /**
+
+     /**
      * Deletes all tasks assigned to the specified user.
      *
      * <p>This method collects the IDs of tasks assigned to the given user and
@@ -134,10 +129,10 @@ public class TaskService {
                 .filter(task -> userId.equals(task.getAssignedToUserId()))
                 .map(Task::getId)
                 .toList();
-        //tasksToDelete.forEach(taskRepository::remove);
         tasksToDelete.forEach(this::deleteTask);        
         return !tasksToDelete.isEmpty();
     }
+
 }
 
 

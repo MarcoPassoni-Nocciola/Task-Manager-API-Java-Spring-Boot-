@@ -58,7 +58,7 @@ public class TaskController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Task createTask(@RequestBody Task task) {
-        // Hardcode the creating user ID for testing purposes
+        // Hardcode the creating user ID for pipeline testing purposes
         String currentUserId = "current_user"; 
         return taskService.createTask(task, currentUserId);
     }
@@ -92,13 +92,16 @@ public class TaskController {
         }
     }
 
-    // --- DELETE method ---
+
+        // --- DELETE method ---
 
     /**
-     * Delete a task by UserID.
-     * Example: DELETE /api/v1/users/{userId}
+     * Delete all tasks assigned to a specific user.
+     * Example: DELETE /api/v1/tasks/users/{userId}
+     * 
+     * @param userId The ID of the user whose assigned tasks should be deleted
+     * @return 204 No Content if tasks were deleted, 404 Not Found if no tasks were found for the user
      */
-    
     @DeleteMapping("/users/{userId}")
     public ResponseEntity<Void> deleteTasksByUserId(@PathVariable String userId) {
         if(taskService.deleteTasksOfUser(userId)){
