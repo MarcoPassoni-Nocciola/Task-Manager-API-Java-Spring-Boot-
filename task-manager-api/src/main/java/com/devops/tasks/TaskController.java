@@ -92,4 +92,13 @@ public class TaskController {
         }
     }
 
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<Void> deleteTasksByUserId(@PathVariable String userId) {
+        if(taskService.deleteTasksOfUser(userId)){
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

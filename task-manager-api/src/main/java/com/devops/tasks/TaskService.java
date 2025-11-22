@@ -119,6 +119,25 @@ public class TaskService {
                 .filter(task -> userId.equals(task.getAssignedToUserId()))
                 .toList();
     }
+
+    /**
+     * Deletes all tasks assigned to the specified user.
+     *
+     * <p>This method collects the IDs of tasks assigned to the given user and
+     * removes each task from the in-memory repository.</p>
+     *
+     * @param userId the ID of the user whose assigned tasks should be deleted
+     * @return {@code true} if at least one task was deleted, {@code false} if no tasks were found for the user
+     */
+    public boolean deleteTasksOfUser(String userId) {
+        List<String> tasksToDelete = taskRepository.values().stream()
+                .filter(task -> userId.equals(task.getAssignedToUserId()))
+                .map(Task::getId)
+                .toList();
+        //tasksToDelete.forEach(taskRepository::remove);
+        tasksToDelete.forEach(this::deleteTask);        
+        return !tasksToDelete.isEmpty();
+    }
 }
 
 
