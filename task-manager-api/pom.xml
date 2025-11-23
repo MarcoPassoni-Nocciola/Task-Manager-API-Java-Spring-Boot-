@@ -55,7 +55,7 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.8.0</version>
+                <version>4.9.8.2</version>
                 <configuration>
                     <effort>Max</effort>
                     <threshold>Low</threshold>
@@ -84,11 +84,6 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.12.0</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>3.6.0</version>
                 <configuration>
@@ -108,4 +103,16 @@
             </plugin>
         </plugins>
     </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.12.0</version>
+                <configuration>
+                    <outputDirectory>${project.build.directory}/site/apidocs</outputDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>
