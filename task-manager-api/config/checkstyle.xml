@@ -50,26 +50,26 @@
 
 <module name="Checker">
 
-    <!-- Simplified Checkstyle configuration for gradual adoption -->
+  <!-- Simplified Checkstyle configuration for gradual adoption -->
 
-        <!-- Basic file-level checks -->
-        <module name="TreeWalker">
-            <!-- Import checks -->
-            <module name="AvoidStarImport"/>
-            <module name="UnusedImports"/>
+  <!-- File-level checks that are NOT TreeWalker children -->
+  <module name="LineLength">
+    <property name="max" value="120"/>
+  </module>
+  <module name="FileTabCharacter"/>
+  <module name="NewlineAtEndOfFile"/>
 
-            <!-- Naming conventions (keep essential ones) -->
-            <module name="TypeName"/>
-            <module name="MethodName"/>
+  <!-- TreeWalker contains checks that analyze AST (imports, naming, etc.) -->
+  <module name="TreeWalker">
+    <!-- Import checks -->
+    <module name="AvoidStarImport"/>
+    <module name="UnusedImports"/>
 
-            <!-- Simple coding checks -->
-            <module name="LineLength">
-                <property name="max" value="120"/>
-            </module>
-            <module name="FileTabCharacter"/>
-            <module name="NewlineAtEndOfFile"/>
-        </module>
+    <!-- Naming conventions (keep essential ones) -->
+    <module name="TypeName"/>
+    <module name="MethodName"/>
+  </module>
 
-        <!-- Minimal additional checks outside TreeWalker -->
-        <module name="FileLength"/>
+  <!-- Minimal additional checks outside TreeWalker -->
+  <module name="FileLength"/>
 </module>

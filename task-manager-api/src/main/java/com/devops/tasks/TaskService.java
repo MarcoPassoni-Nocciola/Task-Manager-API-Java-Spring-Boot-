@@ -20,19 +20,31 @@ public class TaskService {
     // Initial dummy data for API testing and demonstration
     public TaskService() {
         // Task 1: Assigned to userB, In Progress
-        Task t1 = new Task("Implement CI/CD Build Stage", "Set up Maven compile job in the pipeline.", "userA");
+        Task t1 = new Task(
+            "Implement CI/CD Build Stage",
+            "Set up Maven compile job in the pipeline.",
+            "userA"
+        );
         t1.setAssignedToUserId("userB");
         t1.setStatus(Task.Status.IN_PROGRESS);
         taskRepository.put(t1.getId(), t1);
 
         // Task 2: Assigned to userA, To Do
-        Task t2 = new Task("Write Report Introduction", "Draft the first section of the assignment report.", "userB");
+        Task t2 = new Task(
+            "Write Report Introduction",
+            "Draft the first section of the assignment report.",
+            "userB"
+        );
         t2.setAssignedToUserId("userA");
         t2.setStatus(Task.Status.TODO);
         taskRepository.put(t2.getId(), t2);
         
         // Task 3: Assigned to userC, Done
-        Task t3 = new Task("Define Deployment Strategy", "Plan the final deploy stage to a staging environment.", "userC");
+        Task t3 = new Task(
+            "Define Deployment Strategy",
+            "Plan the final deploy stage to a staging environment.",
+            "userC"
+        );
         t3.setAssignedToUserId("userC");
         t3.setStatus(Task.Status.DONE);
         taskRepository.put(t3.getId(), t3);
@@ -83,10 +95,19 @@ public class TaskService {
     public Optional<Task> updateTask(String id, Task updatedTask) {
         Task existingTask = taskRepository.get(id);
         if (existingTask != null) {
-            existingTask.setTitle(updatedTask.getTitle() != null ? updatedTask.getTitle() : existingTask.getTitle());
-            existingTask.setDescription(updatedTask.getDescription() != null ? updatedTask.getDescription() : existingTask.getDescription());
-            existingTask.setStatus(updatedTask.getStatus() != null ? updatedTask.getStatus() : existingTask.getStatus());
-            existingTask.setAssignedToUserId(updatedTask.getAssignedToUserId() != null ? updatedTask.getAssignedToUserId() : existingTask.getAssignedToUserId());
+                existingTask.setTitle(updatedTask.getTitle() != null
+                    ? updatedTask.getTitle()
+                    : existingTask.getTitle());
+                existingTask.setDescription(updatedTask.getDescription() != null
+                    ? updatedTask.getDescription()
+                    : existingTask.getDescription());
+                existingTask.setStatus(updatedTask.getStatus() != null
+                    ? updatedTask.getStatus()
+                    : existingTask.getStatus());
+                String newAssignedTo = updatedTask.getAssignedToUserId() != null
+                    ? updatedTask.getAssignedToUserId()
+                    : existingTask.getAssignedToUserId();
+                existingTask.setAssignedToUserId(newAssignedTo);
             
             taskRepository.put(id, existingTask);
             return Optional.of(existingTask);
